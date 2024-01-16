@@ -90,7 +90,7 @@ document.append(div, imagediv, div3)
 
 serve = server(os.environ['PORT'])
 def home():
-  return document
+  return copy.deepcopy(document)
 serve.route("/", "get", func=home)
 serve.route("/doc", "get", func=home)
 serve.route("/styles/output.css", "get", file="./styles/output.css")
