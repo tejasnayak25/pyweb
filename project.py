@@ -2,7 +2,7 @@ from document import Document
 from server import server
 import asyncio
 import time
-import copy
+import copy,os
 
 document = Document()
 
@@ -88,7 +88,7 @@ div3.append(button, div2)
 document.append(div, imagediv, div3)
 
 
-serve = server(3000)
+serve = server(os.environ['PORT'])
 def home():
   return document
 serve.route("/", "get", func=home)
