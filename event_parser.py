@@ -6,7 +6,7 @@ def parseEvents(document: Document, data):
     el:HTMLElement = document.querySelector("#" + data["elementId"])
     if(data["type"] == "click"):
         if(el.onClick != None):
-            el.onClick()
+            el.onClick(el)
 
     if(data['type'] == "change"):
         el.value = data['value']

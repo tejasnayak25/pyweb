@@ -2,21 +2,24 @@ from document import Document
 from server import server
 import asyncio
 import time
-import copy,os
+import copy
 
 document = Document()
 
+maindiv = document.createElement("div")
+maindiv.className = "flex flex-col gap-2 justify-between min-h-full h-full"
+
 div = document.createElement("div")
 div.id = "Div1"
-div.className = "w-full absolute top-0"
+div.className = "w-full relative z-20"
 
 div3 = document.createElement("div")
 div3.id = "Div3"
-div3.className = "w-full bg-black"
+div3.className = "bg-black relative z-20 flex justify-between mx-2"
 
 imagediv = document.createElement("div")
 imagediv.id = "Divimg"
-imagediv.className = "w-full"
+imagediv.className = "w-full -mt-12 relative z-10"
 
 p = document.createElement("p")
 p.id = "Hi"
@@ -26,7 +29,7 @@ p.className = "para w-full block"
 span = document.createElement("span")
 span.id = "Span1"
 span.innerHTML = "Project Alpha"
-span.className = "w-full p-12 text-4xl text-center lemon-regular block"
+span.className = "w-full p-12 pb-0 lg:text-4xl text-2xl text-center lemon-regular block"
 # span.style.color = "black"
 
 div.append(p)
@@ -54,7 +57,7 @@ inp.type = "text"
 inp.id = "Input1"
 inp.value = ""
 inp.placeholder = "Enter text"
-inp.className = "input input-info m-3"
+inp.className = "input input-info m-3 lg:w-11/12 w-8/12"
 
 cross = document.createElement("button")
 cross.innerHTML = "X"
@@ -69,28 +72,34 @@ p2.innerHTML = ""
 p2.id = "p-data"
 div2.append(p2, cross)
 
-def tell():
-  p2.innerHTML = inp.value
-  div2.classList.replace("hidden", "block")
-  document.title = inp.value
+def tell(self):
+  p = self.document.querySelector(f"#{p2.id}")
+  inpu = self.document.querySelector(f"#{inp.id}")
+  div = self.document.querySelector(f"#{div2.id}")
+  doc = self.document
+  p.innerHTML = inpu.value
+  div.classList.replace("hidden", "block")
+  doc.title = inpu.value
 
-def hide():
-  p2.innerHTML = ""
-  div2.classList.replace("block", "hidden")
+def hide(self):
+  p = self.document.querySelector(f"#{p2.id}")
+  div = self.document.querySelector(f"#{div2.id}")
+  p.innerHTML = ""
+  div.classList.replace("block", "hidden")
   
 
 button.onClick = tell
 cross.onClick = hide
 
-div3.append(inp)
-div3.append(button, div2)
+div3.append(inp, button)
 
-document.append(div, imagediv, div3)
+maindiv.append(div, imagediv, div3, div2)
+document.append(maindiv)
 
 
-serve = server(os.environ['PORT'])
+serve = server(3000)
 def home():
-  return copy.deepcopy(document)
+  return document
 serve.route("/", "get", func=home)
 serve.route("/doc", "get", func=home)
 serve.route("/styles/output.css", "get", file="./styles/output.css")

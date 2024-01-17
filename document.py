@@ -40,8 +40,9 @@ class ClassList:
     self.elem._changed = True
 
 class HTMLElement:
-  def __init__(self, tag, id = None, className = None, innerHTML= None, children = [], style = None):
+  def __init__(self, tag, document, id = None, className = None, innerHTML= None, children = [], style = None):
     self.tag = tag
+    self._document = document
     self._id = id
     self._innerHTML = innerHTML
     self.children = list(children)
@@ -52,6 +53,10 @@ class HTMLElement:
       self.style = Style()
     self.onClick = None
     self._changed = False
+
+  @property 
+  def document(self):
+    return self._document
 
   @property
   def id(self):
@@ -216,7 +221,7 @@ class Document:
     self._changed = True
 
   def createElement(self, elem):
-    return HTMLElement(elem)
+    return HTMLElement(elem, self)
   
   @property
   def changed(self):

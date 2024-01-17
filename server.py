@@ -15,9 +15,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print("open success")
         self.uri = self.get_argument("path", default="/")
-        doc = funcs[self.uri]()
-        # self.doc = copy.deepcopy(doc)
-        self.doc = doc
+        self.doc = copy.deepcopy(funcs[self.uri]())
         # timer that sends data to the front end once per second
         self.timer = tornado.ioloop.PeriodicCallback(self.send_data, 1000)
         self.timer.start()
