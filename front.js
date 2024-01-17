@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://" + location.host + "/websocket?path="+location.pathname);  // Use the WebSocket port
+const socket = new WebSocket("wss://" + location.host + "/websocket?path="+location.pathname);  // Use the WebSocket port
 
 socket.addEventListener("open", (event) => {
     console.log("WebSocket connection opened:", event);
