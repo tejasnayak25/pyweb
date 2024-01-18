@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://" + location.host + "/websocket?path="+location.pathname);  // Use the WebSocket port
+const socket = new WebSocket("wss://" + location.host + "/websocket?path="+location.pathname);  // Use the WebSocket port
 
 function func() {
     return ( ( ( 1+Math.random() ) * 0x10000 ) | 0 ).toString( 16 ).substring( 1 );

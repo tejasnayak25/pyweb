@@ -5,7 +5,7 @@ import os
 from pympler import asizeof
 
 
-document = Document()
+document = Document("Project Alpha")
 
 maindiv = document.createElement("div")
 maindiv.className = "flex flex-col gap-2 justify-center items-center min-h-full h-full"
