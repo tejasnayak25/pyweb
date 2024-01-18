@@ -1,5 +1,20 @@
-from elem_attrs import attributes
+from elem_attrs import attributes, getreverse
 from tags import empty, other
+from html_parser import parse_html_string
+import uuid
+
+def buildElem(tree: [], doc):
+    elem_tree = []
+    for item in tree:
+        elem = HTMLElement(item['tag'], doc, innerHTML="")
+        for attribute, value in item.get('attributes', {}).items():
+            setattr(elem, getreverse(attribute), value)
+        if 'text' in item.keys():
+          elem.innerHTML = item['text']
+        else:
+          elem.children = buildElem(item.get('children', []), doc)
+        elem_tree.append(elem)
+    return elem_tree
 
 class Style:
   def __init__(self, items = None):
@@ -43,7 +58,10 @@ class HTMLElement:
   def __init__(self, tag, document, id = None, className = None, innerHTML= None, children = [], style = None):
     self.tag = tag
     self._document = document
-    self._id = id
+    if id:
+      self._id = id
+    else:
+      self._id = f"{self.tag}-{str(uuid.uuid4())}"
     self._innerHTML = innerHTML
     self.children = list(children)
     self.className = className
@@ -131,6 +149,10 @@ class HTMLElement:
     self.children = []
     self._innerHTML = html
     self._changed = True
+    if "<" in html:
+      html = parse_html_string(html)
+      items = buildElem(html, self.document)
+      self.children = items
 
   @property
   def outerHTML(self):
@@ -199,6 +221,12 @@ class Document:
     self.children = []
     self._title = title
     self._changed = False
+
+  def __del__(self):
+    print("Document deleted!")
+
+  def instanceOf(self, elem):
+    return self.querySelector(f"#{elem.id}")
 
   @property
   def title(self):

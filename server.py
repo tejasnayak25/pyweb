@@ -16,11 +16,13 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print("open success")
         self.uri = self.get_argument("path", default="/")
         self.doc = copy.deepcopy(funcs[self.uri]())
+        self.doc.socket_messages = []
         # timer that sends data to the front end once per second
         self.timer = tornado.ioloop.PeriodicCallback(self.send_data, 1000)
         self.timer.start()
 
     def on_close(self):
+        del self.doc
         self.timer.stop()
 
     def send_data(self, message = ""):
@@ -81,6 +83,7 @@ def server(port):
         async def start(self):
             app = make_app(self.routes)
             app.listen(self.port)
+            print(f"Server is running on port {self.port}")
             await asyncio.Event().wait()
         
     app = Serve()

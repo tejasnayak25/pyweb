@@ -2,7 +2,10 @@ from document import Document
 from server import server
 import asyncio
 import time
-import copy, os
+import copy
+# from memory_profiler import memory_usage
+from pympler import asizeof
+
 
 document = Document()
 
@@ -73,17 +76,18 @@ p2.id = "p-data"
 div2.append(p2, cross)
 
 def tell(self):
-  p = self.document.querySelector(f"#{p2.id}")
-  inpu = self.document.querySelector(f"#{inp.id}")
-  div = self.document.querySelector(f"#{div2.id}")
   doc = self.document
+  p = doc.instanceOf(p2)
+  inpu = doc.instanceOf(inp)
+  div = doc.instanceOf(div2)
   p.innerHTML = inpu.value
   div.classList.replace("hidden", "block")
   doc.title = inpu.value
 
 def hide(self):
-  p = self.document.querySelector(f"#{p2.id}")
-  div = self.document.querySelector(f"#{div2.id}")
+  doc = self.document
+  p = doc.instanceOf(p2)
+  div = doc.instanceOf(div2)
   p.innerHTML = ""
   div.classList.replace("block", "hidden")
   
@@ -96,8 +100,12 @@ div3.append(inp, button)
 maindiv.append(div, imagediv, div3, div2)
 document.append(maindiv)
 
+# mem_usage = memory_usage((document, (), {}))
+object_size = asizeof.asizeof(document)
+print(f"Memory usage: {object_size / 1024} KB")
 
-serve = server(os.environ['PORT'])
+
+serve = server(3000)
 def home():
   return document
 serve.route("/", "get", func=home)
